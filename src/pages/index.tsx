@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
@@ -6,6 +7,15 @@ import { type RouterOutputs, api } from "~/utils/api";
 
 const CreatePostWizard = () => {
   const { user } = useUser();
+  const [input, setInput] = useState<string>("");
+  const ctx = api.useContext();
+
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: () => {
+      setInput("");
+      void ctx.posts.getAll.invalidate();
+    },
+  });
 
   if (!user) return null;
 
@@ -21,7 +31,12 @@ const CreatePostWizard = () => {
       <input
         placeholder="Type some emojis!"
         className="grow bg-transparent outline-none"
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        disabled={isPosting}
       />
+      <button onClick={() => mutate({ content: input })}>Post</button>
     </div>
   );
 };
@@ -29,6 +44,7 @@ const CreatePostWizard = () => {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { LoadingPage } from "~/components/loading";
+import { contextProps } from "@trpc/react-query/shared";
 dayjs.extend(relativeTime);
 
 type PostWithUser = RouterOutputs["posts"]["getAll"][number];
@@ -44,12 +60,16 @@ const PostView = (props: PostWithUser) => {
         height={48}
       />
       <div>
-        <div className="text-indigo-300">
-          <span>@{author.username}</span>
+        <div>
+          <span className="font-medium text-indigo-300">
+            @{author.username}
+          </span>
           <span> · </span>
-          <span>{dayjs(post.createdAt).fromNow()}</span>
+          <span className="text-indigo-400">
+            {dayjs(post.createdAt).fromNow()}
+          </span>
         </div>
-        <div className="flex">{post.content}</div>
+        <div className="flex text-xl">{post.content}</div>
       </div>
     </div>
   );
