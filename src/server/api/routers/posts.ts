@@ -20,6 +20,7 @@ const filterUserForClient = (user: User) => {
       user.externalAccounts.find(
         (externalAccount) => externalAccount.provider === "oauth_github"
       )?.username || null,
+    profileUrl: "https://github.com/",
   };
 };
 
@@ -50,7 +51,7 @@ const addUserDataToPosts = async (posts: Post[]) => {
       });
     }
     if (!author.username) {
-      // user the ExternalUsername
+      // use the ExternalUsername
       if (!author.externalUsername) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -64,6 +65,9 @@ const addUserDataToPosts = async (posts: Post[]) => {
       author: {
         ...author,
         username: author.username ?? "(username not found)",
+        profileURL: author.username
+          ? `https://github.com/${author.username}`
+          : "https://github.com/",
       },
     };
   });
