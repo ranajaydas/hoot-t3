@@ -37,7 +37,7 @@ export const CreatePostWizard = () => {
         height={56}
       />
       <input
-        placeholder="⌨️ 🇪Ⓜ️😀🇯📍💲(type some emojis)"
+        placeholder="⌨️ 🇪Ⓜ️😀🇯📍💲"
         className="grow bg-transparent placeholder-gray-50 placeholder-opacity-30 outline-none"
         type="text"
         value={input}
