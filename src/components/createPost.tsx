@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { api } from "~/utils/api";
+import { toast } from "react-hot-toast";
 
 export const CreatePostWizard = () => {
   const { user } = useUser();
@@ -12,6 +13,14 @@ export const CreatePostWizard = () => {
     onSuccess: () => {
       setInput("");
       void ctx.posts.getAll.invalidate();
+    },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError?.fieldErrors.content;
+      if (errorMessage && errorMessage[0]) {
+        toast.error(errorMessage[0]);
+      } else {
+        toast.error("Failed to post 😢...try again later");
+      }
     },
   });
 
@@ -27,11 +36,19 @@ export const CreatePostWizard = () => {
         height={56}
       />
       <input
-        placeholder="Type some emojis!"
-        className="grow bg-transparent outline-none"
+        placeholder="⌨️ 🇪Ⓜ️😀🇯📍💲(type some emojis)"
+        className="grow bg-transparent placeholder-gray-50 placeholder-opacity-30 outline-none"
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (input !== "") {
+              mutate({ content: input });
+            }
+          }
+        }}
         disabled={isPosting}
       />
       <button
