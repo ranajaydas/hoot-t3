@@ -15,19 +15,17 @@ const Home: NextPage = () => {
 
   return (
     <main className="flex h-screen justify-center">
-      <div className="h-full border-indigo-600 md:max-w-2xl">
-        <div>
-          <div className="flex p-4">
-            {isSignedIn && (
-              <div className="flex w-full flex-col">
-                <CreatePostWizard />
-              </div>
-            )}
-          </div>
-          <Feed />
+      <div className="flex h-full flex-col border-indigo-600 md:max-w-2xl">
+        <div className="flex p-4">
+          {isSignedIn && (
+            <div className="flex w-full flex-col">
+              <CreatePostWizard />
+            </div>
+          )}
         </div>
-        <SignInOrOut />
+        <Feed />
       </div>
+      <SignInOrOut />
     </main>
   );
 };

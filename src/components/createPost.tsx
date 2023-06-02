@@ -3,6 +3,7 @@ import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
+import { LoadingSpinner } from "./loading";
 
 export const CreatePostWizard = () => {
   const { user } = useUser();
@@ -51,12 +52,19 @@ export const CreatePostWizard = () => {
         }}
         disabled={isPosting}
       />
-      <button
-        className="rounded-md p-2 pt-0 text-xl transition-colors duration-300 ease-in-out hover:bg-indigo-600"
-        onClick={() => mutate({ content: input })}
-      >
-        📨
-      </button>
+      {isPosting ? (
+        <div className="flex items-center justify-center">
+          <LoadingSpinner size={20} />
+        </div>
+      ) : (
+        <button
+          className="rounded-md p-2 pt-0 text-xl transition-colors duration-300 ease-in-out hover:bg-indigo-600"
+          onClick={() => mutate({ content: input })}
+          disabled={isPosting}
+        >
+          📨
+        </button>
+      )}
     </div>
   );
 };
