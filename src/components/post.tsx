@@ -30,7 +30,7 @@ export const PostView = (props: PostWithUser) => {
             {dayjs(post.createdAt).fromNow()}
           </span>
         </div>
-        <div className="flex text-xl">{post.content}</div>
+        <div className="flex break-all text-xl ">{post.content}</div>
       </div>
     </div>
   );
